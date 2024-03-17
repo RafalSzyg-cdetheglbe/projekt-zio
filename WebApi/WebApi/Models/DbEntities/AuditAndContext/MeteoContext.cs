@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace WebApi.Models.DbEntities
+namespace WebApi.Models.DbEntities.AuditAndContext
 {
     public class MeteoContext : DbContext
     {
