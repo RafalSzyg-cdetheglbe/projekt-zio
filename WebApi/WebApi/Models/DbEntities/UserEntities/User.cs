@@ -18,6 +18,6 @@ namespace WebApi.Models.DbEntities.UserEntities
         [Required]
         public UserType UserType { get; set; }
         public bool IsActive { get; set; }
-        public UserAudit UserAudit { get; set; }
+        public UserAudit? UserAudit { get; set; }
     }
 }
