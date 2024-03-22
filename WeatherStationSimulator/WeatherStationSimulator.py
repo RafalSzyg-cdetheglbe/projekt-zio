@@ -12,7 +12,7 @@ def generateWeatherData(stationId, latitude, longitude, seed=None):
     temperature =  random.uniform(-10, 50)
     humidity =   random.uniform(0, 100)
     windSpeed = random.uniform(20, 150)
-    atmosphericPressure =  random.uniform(900, 1400)
+    atmosphericPressure =  random.uniform(900, 1050)
     rainfall =  random.uniform(0, 100)
 
     random.seed()
