@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApi.Models.DbEntities.AuditAndContext;
 using WebApi.Models.DbEntities.UserEntities;
 using WebApi.Models.DTO;
+using WebApi.Services.Interfaces;
 
 namespace WebApi.Controllers
 {
@@ -15,114 +17,42 @@ namespace WebApi.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly MeteoContext _context;
+        private readonly IUserInterface _userInterface;
 
-        public UsersController(MeteoContext context)
+        public UsersController(IUserInterface userInterface)
         {
-            _context = context;
+            _userInterface = userInterface;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserResponseDTO>>> GetUsers()
         {
-            if (_context.Users == null)
-            {
-                return NotFound();
-            }
-            return await _context.Users.Select(x => new UserResponseDTO(x)).ToListAsync();
+            return _userInterface.GetUsers();
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<UserResponseDTO>> GetById(int id)
         {
-            if (_context.Users == null)
-            {
-                return NotFound();
-            }
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
-            return user != null ? new UserResponseDTO(user) : NotFound();
+            return _userInterface.GetUser(id);
         }
 
         [HttpPost]
-        public async Task<bool> AddUser(UserRequestDTO userDto)
+        public async Task<int> AddUser(UserRequestDTO userDto)
         {
-            if (userDto != null)
-            {
-                var lastId = _context.Users?.Max(x => x.Id);
-                var user = new User()
-                {
-                    Id = lastId ?? 1,
-                    Name = userDto.Name,
-                    Login = userDto.Login,
-                    Password = userDto.Password,
-                    UserType = userDto.UserType,
-                    IsActive = userDto.IsActive,
-                    UserAudit = new UserAudit()
-                    {
-                        LastLoginAt = null,
-                        UpdatedAt = DateTime.Now,
-                        CreatedAt = DateTime.Now,
-                    }
-                };
-                _context.Add(user);
-                _context.SaveChanges();
-                return true;
-            }
-            return false;
+            return _userInterface.AddUser(userDto);
         }
 
         [HttpPut]
-        public async Task<bool> UpdateUser(UserRequestDTO userDto)
+        public async Task UpdateUser(UserRequestDTO userDto)
         {
-            if (_context.Users != null)
-            {
-                var dbUser = _context.Users?.FirstOrDefault(x => x.Id == userDto.Id);
-                if (dbUser != null)
-                {
-                    dbUser.Name = userDto.Name;
-                    dbUser.Login = userDto.Login;
-                    dbUser.Password = userDto.Password;
-                    dbUser.UserType = userDto.UserType;
-                    dbUser.IsActive = userDto.IsActive;
-                    var audit = dbUser.UserAudit;
-                    if (audit != null)
-                    {
-                        audit.UpdatedAt = DateTime.Now;
-                        _context.Update(audit);
-                        _context.SaveChanges();
-                    }
-                    else
-                    {
-                        audit = new UserAudit();
-                        audit.UpdatedAt = DateTime.Now;
-                        audit.CreatedAt = DateTime.Now;
-                        audit.LastLoginAt = null;
-                        _context.Add(audit);
-                        _context.SaveChanges();
-                        dbUser.UserAudit = audit;
-                    }
-                    _context.Update(dbUser);
-                    _context.SaveChanges();
-                }
-                return false;
-            }
-            return false;
+            if (userDto != null)
+                _userInterface.UpdateUser(userDto);
         }
 
         [HttpPut]
         public async Task<bool> DeleteUser(int userId)
         {
-            if (_context.Users != null)
-            {
-                var user = _context.Users.FirstOrDefault(x => x.Id == userId);
-                if (user != null)
-                {
-                    _context.Users.Remove(user);
-                    _context.SaveChanges();
-                    return true;
-                }
-            }
-            return false;
+            return _userInterface.DeleteUser(userId);
         }
     }
 }
