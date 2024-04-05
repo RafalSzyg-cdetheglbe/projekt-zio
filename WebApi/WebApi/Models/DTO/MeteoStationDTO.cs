@@ -7,12 +7,12 @@ namespace WebApi.Models.DTO
         public int Id { get; set; }
         public string? Name { get; set; }
         public UserResponseDTO? Creator { get; set; }
-        public IEnumerable<MeteoDataDTO>? MeteoData { get; set; }
+        public List<MeteoDataDTO>? MeteoData { get; set; }
 
         public double Latitude { get; set; }
         public double Longitude { get; set; }
 
-        public MeteoStationDTO(int id, string? name, UserResponseDTO? creator, IEnumerable<MeteoDataDTO>? meteoData, double latitude, double longitude)
+        public MeteoStationDTO(int id, string? name, UserResponseDTO? creator, List<MeteoDataDTO>? meteoData, double latitude, double longitude)
         {
             Id = id;
             Name = name;

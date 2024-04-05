@@ -14,7 +14,7 @@ namespace WebApi.Models.DbEntities.MeteoEntities
         [ForeignKey(nameof(UserId))]
         public int? UserId { get; set; }
         public int CreatorId { get; set; }
-        public IEnumerable<MeteoData>? MeteoData { get; set; }
+        public List<MeteoData>? MeteoData { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
     }

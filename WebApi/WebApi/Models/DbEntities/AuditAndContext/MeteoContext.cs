@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WebApi.Models.DbEntities.MeteoEntities;
 using WebApi.Models.DbEntities.UserEntities;
 
 namespace WebApi.Models.DbEntities.AuditAndContext
@@ -7,6 +8,7 @@ namespace WebApi.Models.DbEntities.AuditAndContext
     {
         public DbSet<User>? Users { get; set; }
         public DbSet<UserAudit>? UserAudit { get; set; }
+        public DbSet<MeteoStation>? MeteoStations { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder.UseNpgsql("Host=localhost;Database=projektdb;Username=admin;Password=admin");
