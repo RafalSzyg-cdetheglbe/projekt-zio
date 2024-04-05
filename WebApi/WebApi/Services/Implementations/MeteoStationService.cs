@@ -171,11 +171,11 @@ namespace WebApi.Services.Implementations
         private MeteoData CreateAndReturnMeteoData(MeteoDataDTO dto)
         {
             var audit = new BaseAuditData() { CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now };
-            this._dbContext.Add(audit);
-            this._dbContext.SaveChanges();
+            this._dbContext?.BaseAudits?.Add(audit);
+            this._dbContext?.SaveChanges();
 
             var meteoData = new MeteoData(dto, audit);
-            this._dbContext.Add(meteoData);
+            this._dbContext?.MeteoData?.Add(meteoData);
             this._dbContext.SaveChanges();
 
             return meteoData;
