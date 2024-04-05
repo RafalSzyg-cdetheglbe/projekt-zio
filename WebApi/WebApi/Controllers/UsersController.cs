@@ -49,7 +49,7 @@ namespace WebApi.Controllers
                 _userInterface.UpdateUser(userDto);
         }
 
-        [HttpPut]
+        [HttpDelete]
         public async Task<bool> DeleteUser(int userId)
         {
             return _userInterface.DeleteUser(userId);
