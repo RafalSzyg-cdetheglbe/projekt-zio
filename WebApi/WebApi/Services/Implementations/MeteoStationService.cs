@@ -180,5 +180,20 @@ namespace WebApi.Services.Implementations
 
             return meteoData;
         }
+
+        public MeteoStationDTO GetMeteoStation(int id)
+        {
+            var meteoStation = this._dbContext?.MeteoStations?.FirstOrDefault(x => x.Id == id);
+            if (meteoStation != null)
+                return new MeteoStationDTO(meteoStation);
+            return null;
+        }
+
+        public List<MeteoStationDTO>? GetAll()
+        {
+            if (this._dbContext?.MeteoStations != null)
+                return this._dbContext?.MeteoStations?.Select(x => new MeteoStationDTO(x)).ToList();
+            return new List<MeteoStationDTO>();
+        }
     }
 }

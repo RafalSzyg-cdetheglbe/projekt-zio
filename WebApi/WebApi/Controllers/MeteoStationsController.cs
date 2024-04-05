@@ -14,6 +14,17 @@ namespace WebApi.Controllers
         {
             _meteoStationService = meteoStationService;
         }
+        [HttpGet("{id}")]
+        public MeteoStationDTO? GetById(int id)
+        {
+            return _meteoStationService.GetMeteoStation(id);
+        }
+
+        [HttpGet]
+        public List<MeteoStationDTO>? GetAll()
+        {
+            return _meteoStationService.GetAll();
+        }
 
         [HttpPost]
         public ActionResult<int> AddMeteoStation(MeteoStationDTO dto)
