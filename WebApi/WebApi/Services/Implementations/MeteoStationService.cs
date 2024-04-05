@@ -171,14 +171,29 @@ namespace WebApi.Services.Implementations
         private MeteoData CreateAndReturnMeteoData(MeteoDataDTO dto)
         {
             var audit = new BaseAuditData() { CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now };
-            this._dbContext.Add(audit);
-            this._dbContext.SaveChanges();
+            this._dbContext?.BaseAudits?.Add(audit);
+            this._dbContext?.SaveChanges();
 
             var meteoData = new MeteoData(dto, audit);
-            this._dbContext.Add(meteoData);
+            this._dbContext?.MeteoData?.Add(meteoData);
             this._dbContext.SaveChanges();
 
             return meteoData;
+        }
+
+        public MeteoStationDTO GetMeteoStation(int id)
+        {
+            var meteoStation = this._dbContext?.MeteoStations?.FirstOrDefault(x => x.Id == id);
+            if (meteoStation != null)
+                return new MeteoStationDTO(meteoStation);
+            return null;
+        }
+
+        public List<MeteoStationDTO>? GetAll()
+        {
+            if (this._dbContext?.MeteoStations != null)
+                return this._dbContext?.MeteoStations?.Select(x => new MeteoStationDTO(x)).ToList();
+            return new List<MeteoStationDTO>();
         }
     }
 }

@@ -18,6 +18,7 @@ namespace WebApi
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<MeteoContext>();
             builder.Services.AddScoped<IUserInterface, UserService>();
+            builder.Services.AddScoped<IMeteoStationInterface, MeteoStationService>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
