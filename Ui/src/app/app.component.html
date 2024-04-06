@@ -1,1 +1,44 @@
-<h1>hwdp</h1>
+
+<p-toolbar [style]="{ 'border-radius': '3rem', 'background-image': 'linear-gradient(to right, var(--primary-color), var(--bluegray-700))' }">
+    <ng-template pTemplate="start">
+            <i class="pi pi-globe" style="font-size: 40px; color: var(--primary-color-text)"></i>
+            <span class="meteoTitle ">MeteoApp</span>
+    </ng-template>
+
+    <ng-template pTemplate="center">
+        <!-- to do: przenieść gdzieś? -->
+        <p-button [rounded]="true" label="Add meteo station" icon="pi pi-plus"></p-button>
+    </ng-template>
+    
+    <ng-template pTemplate="end">
+        <div style="margin-right: 40px">
+            <p-button [rounded]="true" label="Login" icon="pi pi-user" size="large"></p-button>
+        </div>
+    </ng-template>
+</p-toolbar>
+
+<div class="content-margins">
+    <p-splitter [style]="{ height: '600px' }" >
+        <ng-template pTemplate>
+            <div style="height: 100%; width: 100%">
+                <aol-map>
+                <aol-view [zoom]="17">
+                    <aol-coordinate [x]="19.033542" [y]="50.255506" [srid]="'EPSG:4326'"></aol-coordinate>
+                </aol-view>
+                <aol-layer-tile>
+                    <aol-source-osm></aol-source-osm>
+                </aol-layer-tile>
+                <aol-interaction-default></aol-interaction-default>
+                <aol-control-scaleline></aol-control-scaleline>
+                <aol-control-zoomslider></aol-control-zoomslider>
+                <aol-control-zoom></aol-control-zoom>
+                </aol-map>
+            </div>
+        </ng-template>
+        <ng-template pTemplate>
+            <div class="col flex align-items-center justify-content-center">Table to do</div>
+        </ng-template>
+    </p-splitter>
+</div>
+
+  

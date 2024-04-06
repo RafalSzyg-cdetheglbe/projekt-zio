@@ -1,0 +1,18 @@
+
+.meteoTitle {
+    font-size: 40px;
+    margin-left: 10px;
+    color: var(--primary-color-text);
+}
+
+:host ::ng-deep .p-button{
+    width: 200px;
+  }
+
+.horizontal-spacer {
+  height: 20px;
+}
+
+.content-margins{
+  margin: 40px;
+}
