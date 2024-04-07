@@ -2,6 +2,7 @@ import json
 import random
 from datetime import datetime
 import requests
+import os
 import time
 
 def generateWeatherData(stationId, latitude, longitude, seed=None):
@@ -37,22 +38,26 @@ def generateWeatherData(stationId, latitude, longitude, seed=None):
     return data
 
 
-stationId = "stacja1"
-latitude = 50.22909423082472
-longitude = 18.666159245439527
-serverIp = "af1a4605-47ef-4b9b-9986-d675d7b715c1.mock.pstmn.io"
-path = "back"
-url = f"https://{serverIp}/{path}"
-seed = 2137
+stationId =  os.environ.get('stationId','stacja1')
+latitude = os.environ.get('latitude','0')
+longitude =  os.environ.get('longitude','0')
+serverIp = os.environ.get('serverIp','localhost')
+path = os.environ.get('path','')
+seed = os.environ.get('seed','0')
+url = f"{serverIp}/{path}"
 
 while True:
     weatherData = generateWeatherData(stationId, latitude, longitude, seed)
     print(weatherData)
-   
-    response = requests.post(url, json=weatherData)
-    if response.status_code == 200:
-         print("Dane zostały pomyślnie wysłane")
+    try:
+        response = requests.post(url, json=weatherData)
+    except Exception as e:
+        print("Wystąpił wyjątek:", e)
     else:
-         print("Wystąpił problem podczas wysyłania danych na serwer", response.status_code)
-    time.sleep(2)
+        if response.status_code == 200:
+            print("Dane zostały pomyślnie wysłane")
+        else:
+            print("Wystąpił problem podczas wysyłania danych na serwer", response.status_code)
+    finally:
+        time.sleep(2)
 
