@@ -12,8 +12,65 @@
       },
       "properties": {
         "name": "Politechnika Slaska",
-        "temperature": 21.37,
-        "pressure": 1020
+        "temperature": "21.37°C",
+        "pressure": "1020 hPa",
+        "humidity": "70%",
+        "rainfall": "Mocno pada",
+        "windspeed": "100 km/h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.02674,
+          50.26628
+        ]
+      },
+      "properties": {
+        "name": "Abcabc",
+        "temperature": "41°C",
+        "pressure": "1022 hPa",
+        "humidity": "31%",
+        "rainfall": "Nie pada",
+        "windspeed": "31 km/h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.034769,
+          50.256130
+        ]
+      },
+      "properties": {
+        "name": "wadsaeqw",
+        "temperature": "29°C",
+        "pressure": "1020 hPa",
+        "humidity": "80%",
+        "rainfall": "pada",
+        "windspeed": "21 km/h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.01434,
+          50.26198 
+        ]
+      },
+      "properties": {
+        "name": "ASdadasd",
+        "temperature": "21°C",
+        "pressure": "1010 hPa",
+        "humidity": "50%",
+        "rainfall": "Pada",
+        "windspeed": "51 km/h"
       }
     }
   ]
