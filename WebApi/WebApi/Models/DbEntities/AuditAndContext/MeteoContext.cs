@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Data.Common;
 using WebApi.Models.DbEntities.MeteoEntities;
 using WebApi.Models.DbEntities.UserEntities;
 
@@ -13,6 +14,8 @@ namespace WebApi.Models.DbEntities.AuditAndContext
         public DbSet<MeteoData>? MeteoData { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.UseNpgsql("Host=localhost;Database=projektdb;Username=admin;Password=admin");
+        {
+            optionsBuilder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=MeteoDb;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
+        }
     }
 }
