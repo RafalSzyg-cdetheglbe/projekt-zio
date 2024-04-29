@@ -20,7 +20,7 @@ namespace WebApi.Models.DbEntities.UserEntities
         public UserType UserType { get; set; }
         public bool IsActive { get; set; }
         public UserAudit? UserAudit { get; set; }
-
+        public User() { }
         public User(UserRequestDTO userRequestDTO)
         {
             Id = userRequestDTO.Id;
