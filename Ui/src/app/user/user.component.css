@@ -1,0 +1,62 @@
+/* Style for the headless template of p-dialog */
+.ui-dialog .ui-dialog-content {
+    border-radius: 12px;
+    background-image: radial-gradient(circle at left top, var(--primary-400), var(--primary-700));
+    padding: 20px;
+}
+/* Style for the dialog wrapper */
+.ui-dialog .ui-dialog-wrapper {
+    border-radius: 12px;
+    border: none; /* Remove default border */
+}
+
+/* Style for flex container */
+.flex {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Style for align-items-center */
+.align-items-center {
+    align-items: center;
+}
+
+/* Style for gap-2 */
+.gap-2 > * {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+/* Style for labels */
+label {
+    color: var(--primary-50);
+    font-weight: bold;
+}
+
+/* Style for inputs */
+input {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    padding: 10px;
+    color: var(--primary-50);
+}
+
+/* Style for gap-2 */
+.gap-2 > * {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.dialog-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Style for the logo */
+.logo {
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
