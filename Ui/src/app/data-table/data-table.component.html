@@ -1,0 +1,22 @@
+<p-table [value]="meteoList">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Name</th>
+            <th>Temperature</th>
+            <th>Humidity</th>
+            <th>Wind</th>
+            <th>Pressure</th>
+            <th>Rainfall</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-meteo>
+        <tr>
+            <td>{{ meteo.name }}</td>
+            <td>{{ meteo.Temperature }}</td>
+            <td>{{ meteo.Humidity }}</td>
+            <td>{{ meteo.WindSpeed }}</td>
+            <td>{{ meteo.AtmosphericPressure }}</td>
+            <td>{{ meteo.Rainfall }}</td>
+        </tr>
+    </ng-template>
+</p-table>

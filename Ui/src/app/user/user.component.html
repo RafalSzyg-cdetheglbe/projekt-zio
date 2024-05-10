@@ -1,1 +1,25 @@
-<p>user works!</p>
+<p-button [rounded]="true" label="Login" icon="pi pi-user" size="large" (click)="showDialog()"></p-button>
+
+<p-dialog [(visible)]="visible">
+    <ng-template pTemplate="headless">
+        <div class="flex flex-column px-8 py-5 gap-4 dialog-container"
+            style="border-radius: 2px; background-image: radial-gradient(circle at left top, var(--primary-400), var(--primary-700))">
+            <div class="logo">
+                <i class="pi pi-globe" style="font-size: 30px; color: var(--primary-color-text)"></i>
+            </div>
+            <div class="inline-flex flex-column gap-2">
+                <label for="username" class="text-primary-50 font-semibold">Username</label>
+                <input pInputText id="username" class="bg-white-alpha-20 border-none p-3 text-primary-50" />
+            </div>
+            <div class="inline-flex flex-column gap-2">
+                <label for="password" class="text-primary-50 font-semibold">Password</label>
+                <input pInputText id="password" class="bg-white-alpha-20 border-none p-3 text-primary-50"
+                    type="password" />
+            </div>
+            <div class="flex align-items-center gap-2">
+                <p-button [rounded]="true" label="Sign-In" (click)="closeDialog()" />
+                <p-button [rounded]="true" label="Cancel" (click)="closeDialog()" />
+            </div>
+        </div>
+    </ng-template>
+</p-dialog>

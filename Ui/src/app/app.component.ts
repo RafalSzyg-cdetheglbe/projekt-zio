@@ -9,13 +9,19 @@ import { MapComponent } from './map/map.component';
 import { MarkerService } from './marker.service';
 import { HttpClientModule } from '@angular/common/http';
 import { MapPopupService } from './map-popup.service';
+import { TreeTableModule } from 'primeng/treetable';
+import { DataTableComponent } from './data-table/data-table.component';
+import { DialogModule } from 'primeng/dialog';
+import { UserComponent } from './user/user.component';
 
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, ButtonModule, ToolbarModule, AvatarModule, AngularOpenlayersModule, SplitterModule, MapComponent, HttpClientModule],
+  imports: [RouterOutlet, ButtonModule, ToolbarModule, AvatarModule, 
+    AngularOpenlayersModule, SplitterModule, MapComponent, 
+    HttpClientModule, TreeTableModule, DataTableComponent, DialogModule, UserComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   providers: [MarkerService, MapPopupService]
