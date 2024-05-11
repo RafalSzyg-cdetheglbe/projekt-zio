@@ -59,6 +59,7 @@ def createNewStation(name):
             print("Dane stacji zostaly pomyślnie wysłane")
         else:
             print("Wystąpił problem podczas wysyłania stacji na serwer", response.status_code)
+    setCoor(stationId)
 
 #Ustawianie aktualnych koordynatów
 def setCoor(stationId):
@@ -175,7 +176,7 @@ valuesDateTypeValueType =[
 while stationId==-1:
     stationId = getStationId(stationName)
     time.sleep(5)
-setCoor(stationId)
+
     
 while True:   
     data = generateWeatherData(stationId,seed)
