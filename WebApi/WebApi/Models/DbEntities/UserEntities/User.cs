@@ -9,13 +9,13 @@ namespace WebApi.Models.DbEntities.UserEntities
         public int Id { get; set; }
         [Required]
         [StringLength(255)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
         [Required]
         [StringLength(255)]
-        public string Login { get; set; }
+        public string? Login { get; set; }
         [Required]
         [StringLength(255)]
-        public string Password { get; set; }
+        public string? Password { get; set; }
         [Required]
         public UserType UserType { get; set; }
         public bool IsActive { get; set; }

@@ -8,6 +8,7 @@ namespace WebApi.Models.DTO
         public string Name { get; set; }
         public UserType UserType { get; set; }
         public bool IsActive { get; set; }
+        public UserResponseDTO() { }
         public UserResponseDTO(User user)
         {
             Id = user.Id;
@@ -19,11 +20,12 @@ namespace WebApi.Models.DTO
     public class UserRequestDTO
     {
         public int Id { get; set; }
-        public string Login { get; set; }
-        public string Password { get; set; }
-        public string Name { get; set; }
+        public string? Login { get; set; }
+        public string? Password { get; set; }
+        public string? Name { get; set; }
         public UserType UserType { get; set; }
         public bool IsActive { get; set; }
+        public UserRequestDTO() { }
         public UserRequestDTO(int id, string login, string password, string name, UserType userType, bool isActive)
         {
             Id = id;

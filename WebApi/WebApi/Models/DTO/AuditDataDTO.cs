@@ -10,6 +10,7 @@ namespace WebApi.Models.DTO
         public DateTime UpdatedAt { get; set; }
         public DateTime? LastLoginAt { get; set; } //dla usera
 
+        public AuditDataDTO() { }
         public AuditDataDTO(int id, DateTime createdAt, DateTime updatedAt, DateTime? lastLoginAt)
         {
             Id = id;

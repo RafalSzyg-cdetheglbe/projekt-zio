@@ -18,5 +18,6 @@ namespace WebApi.Models.DbEntities.MeteoEntities
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public BaseAuditData? AuditData { get; set; }
+        public MeteoStation() { }
     }
 }
