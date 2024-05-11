@@ -1,5 +1,6 @@
 ﻿using WebApi.Models.DbEntities.AuditAndContext;
 using WebApi.Models.DbEntities.MeteoEntities;
+using WebApi.Models.DbEntities.UserEntities;
 using WebApi.Models.DTO;
 using WebApi.Services.Interfaces;
 
@@ -124,13 +125,15 @@ namespace WebApi.Services.Implementations
 
         private void AddOrUpdateUser(MeteoStation station, MeteoStationDTO dto)
         {
-            if (dto.Creator != null)
+            if (dto.Creator == null || dto.Creator.Id <= 0)
+                throw new Exception("Podany użytkownik nie istnieje.");
+            else
             {
-                if (dto.Creator.Id != station.CreatorId)
+                var user = this._dbContext.Users?.FirstOrDefault(x => x.Id == dto.Creator.Id);
+                if (user != null)
                 {
-                    var creator = this._dbContext?.Users?.FirstOrDefault(x => x.Id == dto.Creator.Id);
-                    if (creator != null)
-                        station.Creator = creator;
+                    station.Creator = user;
+                    station.CreatorId = user.Id;
                 }
             }
         }

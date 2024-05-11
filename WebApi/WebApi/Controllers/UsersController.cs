@@ -25,25 +25,25 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserResponseDTO>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers()
         {
             return _userInterface.GetUsers();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserResponseDTO>> GetById(int id)
+        public async Task<ActionResult<UserDTO>> GetById(int id)
         {
             return _userInterface.GetUser(id);
         }
 
         [HttpPost]
-        public async Task<int> AddUser(UserRequestDTO userDto)
+        public async Task<int> AddUser(UserDTO userDto)
         {
             return _userInterface.AddUser(userDto);
         }
 
         [HttpPut]
-        public async Task UpdateUser(UserRequestDTO userDto)
+        public async Task UpdateUser(UserDTO userDto)
         {
             if (userDto != null)
                 _userInterface.UpdateUser(userDto);
