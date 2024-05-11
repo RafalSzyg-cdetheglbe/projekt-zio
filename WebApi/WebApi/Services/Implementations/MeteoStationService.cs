@@ -39,6 +39,7 @@ namespace WebApi.Services.Implementations
             {
                 station.Latitude = latitude;
                 station.Longitude = longitude;
+                UpdateAuditData(station);
                 this._dbContext?.Update(station);
                 this._dbContext?.SaveChanges();
             }
@@ -71,15 +72,21 @@ namespace WebApi.Services.Implementations
 
         private void UpdateAuditData(MeteoStation meteoStation)
         {
-            if (meteoStation.AuditData != null)
-                meteoStation.AuditData.UpdatedAt = DateTime.UtcNow;
-
+            if (meteoStation.AuditDataId != null)
+            {
+                var audit = this._dbContext.BaseAudits?.FirstOrDefault(x => x.Id == meteoStation.AuditDataId);
+                if (audit != null)
+                {
+                    audit.UpdatedAt = DateTime.Now;
+                    this._dbContext.Update(audit);
+                    this._dbContext.SaveChanges();
+                }
+            }
             else
             {
                 var auditData = new BaseAuditData();
-                auditData.UpdatedAt = DateTime.UtcNow;
-                auditData.CreatedAt = DateTime.UtcNow;
-                this._dbContext.Add(auditData);
+                auditData.UpdatedAt = DateTime.Now;
+                auditData.CreatedAt = DateTime.Now;
                 meteoStation.AuditData = auditData;
             }
         }
@@ -228,8 +235,44 @@ namespace WebApi.Services.Implementations
         {
             var meteoStation = this._dbContext?.MeteoStations?.FirstOrDefault(x => x.Id == id);
             if (meteoStation != null)
-                return new MeteoStationDTO(meteoStation);
+            {
+                var dto = new MeteoStationDTO(meteoStation);
+                FillAuditDataDtO(dto, meteoStation.AuditDataId);
+                FillUserDTO(dto, meteoStation.CreatorId);
+                FillMeteoDataDTO(dto);
+                return dto;
+            }
             return null;
+        }
+
+        private MeteoStationDTO FillUserDTO(MeteoStationDTO dto, int creatorId)
+        {
+            var user = this._dbContext.Users?.FirstOrDefault(x => x.Id == creatorId);
+            if (user != null)
+                dto.Creator = new UserDTO(user);
+            return dto;
+        }
+
+        private MeteoStationDTO FillMeteoDataDTO(MeteoStationDTO dto)
+        {
+            var meteoData = this._dbContext.MeteoData?
+                .Where(x => x.StationId == dto.Id).ToList()
+                .Select(x => new MeteoDataDTO(x)).ToList();
+
+            if (meteoData != null && meteoData.Count() > 0)
+                dto.MeteoData = meteoData;
+            return dto;
+        }
+
+        private MeteoStationDTO FillAuditDataDtO(MeteoStationDTO dto, int? auditDataId)
+        {
+            if (auditDataId.HasValue)
+            {
+                var auditData = this._dbContext.BaseAudits?.FirstOrDefault(x => x.Id == auditDataId);
+                if (auditData != null)
+                    dto.AuditData = new AuditDataDTO(auditData);
+            }
+            return dto;
         }
 
         public List<MeteoStationDTO>? GetAll()

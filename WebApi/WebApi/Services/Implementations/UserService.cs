@@ -103,13 +103,34 @@ namespace WebApi.Services.Implementations
                 {
                     user.Login = userRequestDTO.Login;
                     user.IsActive = userRequestDTO.IsActive;
-                    user.UserAudit.UpdatedAt = DateTime.Now;
                     user.UserType = userRequestDTO.UserType;
                     user.Password = userRequestDTO.Password;
                     user.Name = userRequestDTO.Name;
+                    UpdateUserAudit(user);
                     _dbContext.Update(user);
                     _dbContext.SaveChanges();
                 }
+            }
+        }
+
+        private void UpdateUserAudit(User user)
+        {
+            if (user.UserAuditId.HasValue)
+            {
+                var audit = _dbContext.UserAudit?.FirstOrDefault(x => x.Id == user.UserAuditId);
+                if (audit != null)
+                {
+                    audit.UpdatedAt = DateTime.Now;
+                    this._dbContext.SaveChanges();
+                }
+            }
+            else
+            {
+                var audit = new UserAudit() { CreatedAt = DateTime.Now, LastLoginAt = DateTime.Now, UpdatedAt = DateTime.Now };
+                this._dbContext.Add(audit);
+                this._dbContext.SaveChanges();
+                user.UserAudit = audit;
+                user.UserAuditId = audit.Id;
             }
         }
     }

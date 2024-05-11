@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using WebApi.Models.DTO;
 
 namespace WebApi.Models.DbEntities.UserEntities
@@ -20,6 +21,8 @@ namespace WebApi.Models.DbEntities.UserEntities
         public UserType UserType { get; set; }
         public bool IsActive { get; set; }
         public UserAudit? UserAudit { get; set; }
+        [ForeignKey(nameof(UserAuditId))]
+        public int? UserAuditId { get; set; }
         public User() { }
         public User(UserDTO userRequestDTO)
         {

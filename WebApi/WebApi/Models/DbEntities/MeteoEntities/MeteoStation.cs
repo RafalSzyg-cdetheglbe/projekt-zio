@@ -17,6 +17,8 @@ namespace WebApi.Models.DbEntities.MeteoEntities
         public List<MeteoData>? MeteoData { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
+        [ForeignKey(nameof(AuditDataId))]
+        public int? AuditDataId { get; set; }
         public BaseAuditData? AuditData { get; set; }
         public MeteoStation() { }
     }

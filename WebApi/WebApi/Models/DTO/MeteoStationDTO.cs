@@ -8,9 +8,9 @@ namespace WebApi.Models.DTO
         public string? Name { get; set; }
         public UserDTO? Creator { get; set; }
         public List<MeteoDataDTO>? MeteoData { get; set; }
-
         public double Latitude { get; set; }
         public double Longitude { get; set; }
+        public AuditDataDTO? AuditData { get; set; }
 
         public MeteoStationDTO() { }
 
