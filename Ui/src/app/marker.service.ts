@@ -59,11 +59,6 @@ export class MarkerService {
     })
   }
 
-  createMeteoStationList(): MeteoStationDTO[] {
-    
-    return this.meteoStationList
-  }
-
   meteoList: MeteoData[] = [];
 
   makeMeteoMarkersFromGeoJson(map: L.Map): void {
