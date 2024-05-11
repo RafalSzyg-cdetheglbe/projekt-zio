@@ -1,10 +1,10 @@
 FROM python:3.11
 
-ENV stationId="default_station"
+ENV stationName="default_station"
 ENV latitude="0"
 ENV longitude="0"
-ENV serverIp="localhost"
-ENV path=""
+ENV serverIp="127.0.0.1"
+ENV port = "7013"
 ENV seed="0"
 
 # Kopiowanie plików aplikacji
