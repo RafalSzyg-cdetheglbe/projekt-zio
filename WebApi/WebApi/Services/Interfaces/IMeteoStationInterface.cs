@@ -6,6 +6,7 @@ namespace WebApi.Services.Interfaces
     {
         public MeteoStationDTO? GetMeteoStation(int id);
         public List<MeteoStationDTO>? GetAll();
+        public List<MeteoStationListEntry> GetUserStationsListEntries(int userId);
         public int AddMeteoStation(MeteoStationDTO dto);
         public bool DeleteMeteoStation(int id);
         public void UpdateMeteoStation(MeteoStationDTO dto);

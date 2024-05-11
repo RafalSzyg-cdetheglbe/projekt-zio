@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WebApi.Models.DbEntities.AuditAndContext;
 using WebApi.Models.DbEntities.UserEntities;
 
 namespace WebApi.Models.DbEntities.MeteoEntities
@@ -11,11 +12,11 @@ namespace WebApi.Models.DbEntities.MeteoEntities
         [Required]
         public string? Name { get; set; }
         public User? Creator { get; set; }
-        [ForeignKey(nameof(UserId))]
-        public int? UserId { get; set; }
+        [ForeignKey(nameof(CreatorId))]
         public int CreatorId { get; set; }
         public List<MeteoData>? MeteoData { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
+        public BaseAuditData? AuditData { get; set; }
     }
 }

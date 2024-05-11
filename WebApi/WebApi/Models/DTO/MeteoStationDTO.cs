@@ -12,6 +12,8 @@ namespace WebApi.Models.DTO
         public double Latitude { get; set; }
         public double Longitude { get; set; }
 
+        public MeteoStationDTO() { }
+
         public MeteoStationDTO(int id, string? name, UserResponseDTO? creator, List<MeteoDataDTO>? meteoData, double latitude, double longitude)
         {
             Id = id;
@@ -30,6 +32,16 @@ namespace WebApi.Models.DTO
                 Creator = new UserResponseDTO(meteoStation.Creator);
             if (meteoStation.MeteoData != null && meteoStation.MeteoData.Count() > 0)
                 MeteoData = meteoStation.MeteoData.Select(x => new MeteoDataDTO(x)).ToList();
+            Longitude = meteoStation.Longitude;
+            Latitude = meteoStation.Latitude;
         }
+    }
+
+    public class MeteoStationListEntry
+    {
+        public int Id { get; set; }
+        public string? Name { get; set; }
+        public string? Coordinates { get; set; }
+        public string? AuditData { get; set; }
     }
 }

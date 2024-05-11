@@ -32,6 +32,10 @@ namespace WebApi.Services.Implementations
 
         private int CreateUserWithAuditData(UserRequestDTO userRequestDTO)
         {
+            var checkIfExists = this._dbContext.Users?.FirstOrDefault(x => x.Login == userRequestDTO.Login || x.Name == userRequestDTO.Name);
+            if (checkIfExists != null)
+                throw new Exception("Użytkownik z takimi danymi logowania już istnieje na bazie danych");
+
             var audit = CreateDefaultAudit();
             var user = new User(userRequestDTO);
             user.UserAudit = audit;

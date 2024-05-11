@@ -68,30 +68,70 @@ namespace WebApi.Services.Implementations
             }
         }
 
+        private void UpdateAuditData(MeteoStation meteoStation)
+        {
+            if (meteoStation.AuditData != null)
+                meteoStation.AuditData.UpdatedAt = DateTime.UtcNow;
+
+            else
+            {
+                var auditData = new BaseAuditData();
+                auditData.UpdatedAt = DateTime.UtcNow;
+                auditData.CreatedAt = DateTime.UtcNow;
+                this._dbContext.Add(auditData);
+                meteoStation.AuditData = auditData;
+            }
+        }
+
         private void UpdateMeteoStation(MeteoStation meteoStation, MeteoStationDTO dto)
         {
-            AddUser(meteoStation, dto);
+            AddOrUpdateUser(meteoStation, dto);
             FillBasicStationInfo(meteoStation, dto);
             UpdateMeteoData(meteoStation, dto);
+            UpdateAuditData(meteoStation);
         }
 
         private int AddNewStation(MeteoStationDTO dto)
         {
             var station = new MeteoStation();
-            AddUser(station, dto);
+            AddOrUpdateUser(station, dto);
             FillBasicStationInfo(station, dto);
             FillMeteoData(station, dto);
+            AddNewStationToDb(station);
 
             return station.Id;
         }
 
-        private void AddUser(MeteoStation station, MeteoStationDTO dto)
+        public void AddNewStationToDb(MeteoStation meteoStation)
+        {
+            var audit = new BaseAuditData()
+            {
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+            };
+            meteoStation.AuditData = audit;
+            this._dbContext.Add(audit);
+            this._dbContext.Add(meteoStation);
+            this._dbContext.SaveChanges();
+        }
+
+        public void UpdateMeteoStationToDb(MeteoStation meteoStation)
+        {
+            meteoStation.AuditData.UpdatedAt = DateTime.UtcNow;
+            this._dbContext.Update(meteoStation);
+            this._dbContext.SaveChanges();
+        }
+
+        private void AddOrUpdateUser(MeteoStation station, MeteoStationDTO dto)
         {
             if (dto.Creator != null)
             {
-                var creator = this._dbContext?.Users?.FirstOrDefault(x => x.Id == dto.Creator.Id);
-                if (creator != null)
-                    station.Creator = creator;
+                if (dto.Creator.Id != station.CreatorId)
+                {
+                    var creator = this._dbContext?.Users?.FirstOrDefault(x => x.Id == dto.Creator.Id);
+                    if (creator != null)
+                        station.Creator = creator;
+                }
             }
         }
 
@@ -176,7 +216,7 @@ namespace WebApi.Services.Implementations
 
             var meteoData = new MeteoData(dto, audit);
             this._dbContext?.MeteoData?.Add(meteoData);
-            this._dbContext.SaveChanges();
+            this._dbContext?.SaveChanges();
 
             return meteoData;
         }
@@ -194,6 +234,32 @@ namespace WebApi.Services.Implementations
             if (this._dbContext?.MeteoStations != null)
                 return this._dbContext?.MeteoStations?.Select(x => new MeteoStationDTO(x)).ToList();
             return new List<MeteoStationDTO>();
+        }
+
+        public List<MeteoStationListEntry> GetUserStationsListEntries(int userId)
+        {
+            var stations = this._dbContext.MeteoStations?.Where(x => x.CreatorId == userId).ToList();
+            if (stations != null && stations.Count() > 0)
+                return stations.Select(x => ConvertStationToListEntry(x)).ToList();
+            else
+                return new List<MeteoStationListEntry>();
+        }
+
+        private MeteoStationListEntry ConvertStationToListEntry(MeteoStation meteoStation)
+        {
+            var entry = new MeteoStationListEntry();
+            entry.Id = meteoStation.Id;
+            if (meteoStation.AuditData != null)
+            {
+                var createdAt = meteoStation.AuditData.CreatedAt.ToString("yyyy-MM-dd HH:mm");
+                var updatedAt = meteoStation.AuditData.UpdatedAt.ToString("yyyy-MM-dd HH:mm");
+                entry.AuditData = "Created at: " + createdAt + ", updated at: " + updatedAt;
+            }
+            if (meteoStation.Name != null)
+                entry.Name = meteoStation.Name;
+            entry.Coordinates = "Latitude: " + Convert.ToString(meteoStation.Latitude) + ", Longitude: "
+                + Convert.ToString(meteoStation.Longitude);
+            return entry;
         }
     }
 }
