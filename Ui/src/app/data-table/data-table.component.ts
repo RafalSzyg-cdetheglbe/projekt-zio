@@ -3,21 +3,32 @@ import { MarkerService } from '../marker.service';
 import { MeteoData } from '../model/meteoStation';
 import { TreeTableModule } from 'primeng/treetable';
 import { TableModule } from 'primeng/table';
+import { MeteoStationDTO } from '../model/MeteoStationDto';
+import { MeteoDataService } from '../meteo-data.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-data-table',
   standalone: true,
-  imports: [TreeTableModule, TableModule],
+  imports: [TreeTableModule, TableModule, CommonModule],
   templateUrl: './data-table.component.html',
   styleUrl: './data-table.component.css'
 })
 export class DataTableComponent implements AfterViewInit {
 
-  meteoList: MeteoData[] = [];
+  meteoList: MeteoStationDTO[] = [];
 
   ngAfterViewInit(): void {
-    this.meteoList = this.markerService.createMeteoStationList()
+    const meteos$ = this.meteoDataService.get();
+    meteos$.subscribe({
+      next: (x) => {
+        console.log('next ', x)
+        this.meteoList = x
+      },
+      error: (x) => { console.log('error ', x) },
+      complete: () => { console.log('complete ') }
+    })
   }
   
-  constructor(private markerService: MarkerService) { }
+  constructor(private meteoDataService: MeteoDataService) { }
 }

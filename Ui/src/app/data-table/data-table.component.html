@@ -1,5 +1,6 @@
 <p-table [value]="meteoList">
-    <ng-template pTemplate="header">
+
+    <!-- <ng-template pTemplate="header">
         <tr>
             <th>Name</th>
             <th>Temperature</th>
@@ -8,15 +9,19 @@
             <th>Pressure</th>
             <th>Rainfall</th>
         </tr>
-    </ng-template>
+    </ng-template> -->
     <ng-template pTemplate="body" let-meteo>
         <tr>
             <td>{{ meteo.name }}</td>
-            <td>{{ meteo.Temperature }}</td>
-            <td>{{ meteo.Humidity }}</td>
-            <td>{{ meteo.WindSpeed }}</td>
-            <td>{{ meteo.AtmosphericPressure }}</td>
-            <td>{{ meteo.Rainfall }}</td>
+            <td>Lon: {{ meteo.longitude }}</td>
+            <td>Lat: {{ meteo.latitude }}</td>
+            <!-- 
+                TO POWINNO DZIAŁAĆ, TYLKO NA RAZIE NIE DOSTAJEMY LISTY meteoData NA GET
+             <div  *ngFor="let md of meteo.meteoData">
+                <td>{{ md.name }}</td>
+                <td>{{ md.value }}</td>
+                <td>{{ md.unit }}</td>
+            </div> -->
         </tr>
     </ng-template>
 </p-table>

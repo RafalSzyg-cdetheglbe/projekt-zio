@@ -13,6 +13,7 @@ import { TreeTableModule } from 'primeng/treetable';
 import { DataTableComponent } from './data-table/data-table.component';
 import { DialogModule } from 'primeng/dialog';
 import { UserComponent } from './user/user.component';
+import { MeteoDataService } from './meteo-data.service';
 
 
 
@@ -24,7 +25,7 @@ import { UserComponent } from './user/user.component';
     HttpClientModule, TreeTableModule, DataTableComponent, DialogModule, UserComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
-  providers: [MarkerService, MapPopupService]
+  providers: [MarkerService, MapPopupService, MeteoDataService]
 })
 export class AppComponent {
   title = 'Ui';
