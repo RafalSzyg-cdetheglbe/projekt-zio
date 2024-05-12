@@ -22,7 +22,7 @@ export class MapPopupService {
       popupinfo += `<div>Latitude: ${data.latitude}</div>`
 
       if (data.meteoData) {
-        for (const md of data.meteoData) {
+        for (const md of data.meteoData.slice(-5)) {
           popupinfo += `<div> ${md.name}: ${md.value} ${md.unit} </div>`
         }
       }

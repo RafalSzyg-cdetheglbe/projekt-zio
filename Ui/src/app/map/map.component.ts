@@ -29,8 +29,8 @@ export class MapComponent implements AfterViewInit {
 
   private initMap(): void {
     this.map = L.map('map', {
-      center: [ 50.26614, 19.14880 ],
-      zoom: 12
+      center: [ 50.25613, 19.06 ],
+      zoom: 14
     });
 
     const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -46,7 +46,6 @@ export class MapComponent implements AfterViewInit {
 
   async ngAfterViewInit(): Promise<void> {
     this.initMap();
-    //await this.markerService.getMeteoList().then((x) => {})
     this.markerService.makeMeteoMarkers(this.map);
   }
 }

@@ -24,6 +24,12 @@ export class DataTableComponent implements AfterViewInit {
       next: (x) => {
         console.log('next ', x)
         this.meteoList = x
+        
+        for (var m of this.meteoList)
+          {
+            m.meteoData = m.meteoData?.slice(-5) !== undefined ? m.meteoData?.slice(-5) : null
+            console.log('dlugosc: ', m.meteoData?.length)
+          }
       },
       error: (x) => { console.log('error ', x) },
       complete: () => { console.log('complete ') }
