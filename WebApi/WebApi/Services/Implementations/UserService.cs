@@ -54,10 +54,10 @@ namespace WebApi.Services.Implementations
                     var audit = user.UserAudit;
                     user.UserAudit = null;
                     _dbContext.Remove(audit);
-                    _dbContext.Remove(user);
-                    _dbContext.SaveChanges();
-                    return true;
                 }
+                _dbContext.Remove(user);
+                _dbContext.SaveChanges();
+                return true;
             }
             return false;
         }

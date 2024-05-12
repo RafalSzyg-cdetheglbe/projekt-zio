@@ -7,11 +7,11 @@ namespace WebApi.Models.DbEntities.AuditAndContext
 {
     public class MeteoContext : DbContext
     {
-        public DbSet<User>? Users { get; set; }
-        public DbSet<BaseAuditData>? BaseAudits { get; set; }
-        public DbSet<UserAudit>? UserAudit { get; set; }
-        public DbSet<MeteoStation>? MeteoStations { get; set; }
-        public DbSet<MeteoData>? MeteoData { get; set; }
+        public virtual DbSet<User>? Users { get; set; }
+        public virtual DbSet<BaseAuditData>? BaseAudits { get; set; }
+        public virtual DbSet<UserAudit>? UserAudit { get; set; }
+        public virtual DbSet<MeteoStation>? MeteoStations { get; set; }
+        public virtual DbSet<MeteoData>? MeteoData { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
