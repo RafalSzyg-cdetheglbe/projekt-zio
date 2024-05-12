@@ -63,8 +63,10 @@ export class AppComponent {
 
   logOut(){
     this.userId = -1;
+
   }
 
+  //trigger
   onSubmit() {
     this.meteoStationData.creator = { id: this.creatorId, name: "null", userType: 0, isActive: true };
     this.meteoService.post(this.meteoStationData).subscribe(() => {
