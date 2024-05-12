@@ -16,6 +16,7 @@ import { UserComponent } from './user/user.component';
 import { MeteoDataService } from './meteo-data.service';
 import { FormsModule } from '@angular/forms';
 import { MeteoStationDTO } from './model/MeteoStationDto';
+import { CommonModule } from '@angular/common';
 
 
 
@@ -24,13 +25,14 @@ import { MeteoStationDTO } from './model/MeteoStationDto';
   standalone: true,
   imports: [RouterOutlet, ButtonModule, ToolbarModule, AvatarModule, 
     AngularOpenlayersModule, SplitterModule, MapComponent, 
-    HttpClientModule, TreeTableModule, DataTableComponent, DialogModule, UserComponent, FormsModule],
+    HttpClientModule, TreeTableModule, DataTableComponent, DialogModule, UserComponent, FormsModule, CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   providers: [MarkerService, MapPopupService, MeteoDataService]
 })
 export class AppComponent {
   title = 'Ui';
+  userId = -1;
 
   public visible: boolean = false;
   creatorId: number=1;
@@ -46,6 +48,10 @@ export class AppComponent {
 
   constructor(private http: HttpClient, private meteoService:MeteoDataService) {
   }
+
+  handleUserId(userId: number) {
+    this.userId = userId;
+  }
   
   showDialog(){
     this.visible = true
@@ -55,11 +61,12 @@ export class AppComponent {
     this.visible = false
   }
 
+  logOut(){
+    this.userId = -1;
+  }
+
   onSubmit() {
-
     this.meteoStationData.creator = { id: this.creatorId, name: "null", userType: 0, isActive: true };
-
-    
     this.meteoService.post(this.meteoStationData).subscribe(() => {
       this.closeDialog();
       location.reload();

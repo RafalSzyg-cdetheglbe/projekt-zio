@@ -9,15 +9,18 @@
             </div>
             <div class="inline-flex flex-column gap-2">
                 <label for="username" class="text-primary-50 font-semibold">Username</label>
-                <input pInputText id="username" class="bg-white-alpha-20 border-none p-3 text-primary-50" />
+                <input pInputText id="username" class="bg-white-alpha-20 border-none p-3 text-primary-50" [(ngModel)]="username" />
             </div>
             <div class="inline-flex flex-column gap-2">
                 <label for="password" class="text-primary-50 font-semibold">Password</label>
                 <input pInputText id="password" class="bg-white-alpha-20 border-none p-3 text-primary-50"
-                    type="password" />
+                    type="password" [(ngModel)]="password" />
+            </div>
+            <div *ngIf="bledneDaneLogowania">
+                Podano błędne dane logowania
             </div>
             <div class="flex align-items-center gap-2">
-                <p-button [rounded]="true" label="Sign-In" (click)="closeDialog()" />
+                <p-button [rounded]="true" label="Sign-In" (click)="signIn()" />
                 <p-button [rounded]="true" label="Cancel" (click)="closeDialog()" />
             </div>
         </div>

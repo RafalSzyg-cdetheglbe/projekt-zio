@@ -54,5 +54,11 @@ namespace WebApi.Controllers
         {
             return _userInterface.DeleteUser(userId);
         }
+
+        [HttpGet("login")]
+        public async Task<int?> Login(string login, string password)
+        {
+            return _userInterface.Login(login, password);
+        }
     }
 }

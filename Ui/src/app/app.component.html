@@ -5,7 +5,7 @@
     </ng-template>
 
     <ng-template pTemplate="center">
-        <p-button [rounded]="true" label="Add meteo station" icon="pi pi-plus" (click)="showDialog()"></p-button>
+        <p-button [rounded]="true" *ngIf="userId > 0" label="Add meteo station" icon="pi pi-plus" (click)="showDialog()"></p-button>
         <p-dialog [(visible)]="visible">
             <ng-template pTemplate="content">
                 <div class="dialog-container">
@@ -37,8 +37,11 @@
     </ng-template>
 
     <ng-template pTemplate="end">
-        <div style="margin-right: 40px">
-            <app-user></app-user>
+        <div style="margin-right: 40px" *ngIf="userId < 0 || userId === undefined">
+            <app-user (userIdEmitter)="handleUserId($event)"></app-user>
+        </div>
+        <div *ngIf="userId > 0">
+            <p-button [rounded]="true" label="Log-out" icon="pi pi-user" size="large" (click)="logOut()"></p-button>
         </div>
     </ng-template>
 </p-toolbar>
