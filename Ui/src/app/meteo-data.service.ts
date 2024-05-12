@@ -14,4 +14,10 @@ export class MeteoDataService {
   get(): Observable<MeteoStationDTO[]> {
       return this.httpClient.get<MeteoStationDTO[]>(this.URL);
   }
+
+  post(meteoStation: MeteoStationDTO): Observable<any> {
+    return this.httpClient.post<any>(this.URL, meteoStation);
+  }
+
+ 
 }
