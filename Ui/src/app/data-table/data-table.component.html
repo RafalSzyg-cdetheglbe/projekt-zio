@@ -15,13 +15,9 @@
             <td>{{ meteo.name }}</td>
             <td>Lon: {{ meteo.longitude }}</td>
             <td>Lat: {{ meteo.latitude }}</td>
-            <!-- 
-                TO POWINNO DZIAŁAĆ, TYLKO NA RAZIE NIE DOSTAJEMY LISTY meteoData NA GET
-             <div  *ngFor="let md of meteo.meteoData">
-                <td>{{ md.name }}</td>
-                <td>{{ md.value }}</td>
-                <td>{{ md.unit }}</td>
-            </div> -->
+        
+            <td *ngFor="let md of meteo.meteoData" >{{ md.name }} {{ md.value }} {{ md.unit }}</td>
+
         </tr>
     </ng-template>
 </p-table>
