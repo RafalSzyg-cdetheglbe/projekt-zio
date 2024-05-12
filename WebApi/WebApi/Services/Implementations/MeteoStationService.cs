@@ -235,14 +235,17 @@ namespace WebApi.Services.Implementations
         {
             var meteoStation = this._dbContext?.MeteoStations?.FirstOrDefault(x => x.Id == id);
             if (meteoStation != null)
-            {
-                var dto = new MeteoStationDTO(meteoStation);
-                FillAuditDataDtO(dto, meteoStation.AuditDataId);
-                FillUserDTO(dto, meteoStation.CreatorId);
-                FillMeteoDataDTO(dto);
-                return dto;
-            }
+                return CreateStationDTOAndFillData(meteoStation);
             return null;
+        }
+
+        private MeteoStationDTO CreateStationDTOAndFillData(MeteoStation meteoStation)
+        {
+            var dto = new MeteoStationDTO(meteoStation);
+            FillAuditDataDtO(dto, meteoStation.AuditDataId);
+            FillUserDTO(dto, meteoStation.CreatorId);
+            FillMeteoDataDTO(dto);
+            return dto;
         }
 
         private MeteoStationDTO FillUserDTO(MeteoStationDTO dto, int creatorId)
@@ -256,7 +259,7 @@ namespace WebApi.Services.Implementations
         private MeteoStationDTO FillMeteoDataDTO(MeteoStationDTO dto)
         {
             var meteoData = this._dbContext.MeteoData?
-                .Where(x => x.StationId == dto.Id).ToList()
+                .Where(x => x.MeteoStation != null && x.MeteoStation.Id == dto.Id).ToList()
                 .Select(x => new MeteoDataDTO(x)).ToList();
 
             if (meteoData != null && meteoData.Count() > 0)
@@ -278,7 +281,13 @@ namespace WebApi.Services.Implementations
         public List<MeteoStationDTO>? GetAll()
         {
             if (this._dbContext?.MeteoStations != null)
-                return this._dbContext?.MeteoStations?.Select(x => new MeteoStationDTO(x)).ToList();
+            {// nie upraszczac linq bo sie nie da, wywala blad z polaczeniem do bazy
+                var res = new List<MeteoStationDTO>();
+                var stations = this._dbContext?.MeteoStations?.ToList();
+                foreach (var station in stations)
+                    res.Add(CreateStationDTOAndFillData(station));
+                return res;
+            }
             return new List<MeteoStationDTO>();
         }
 
