@@ -27,9 +27,9 @@ def createNewStation(name):
       "meteoData": [
         {
           "id": 0,
-          "name": "string",
-          "description": "string",
-          "unit": "string",
+          "name": "",
+          "description": "",
+          "unit": "",
           "auditData": {
             "id": 0,
             "createdAt": current_time,
@@ -37,7 +37,7 @@ def createNewStation(name):
             "lastLoginAt": current_time
           },
           "dataType": 0,
-          "value": "string",
+          "value": "",
           "valueType": 0
         }
       ],
@@ -156,20 +156,19 @@ def generateWeatherData(stationId,seed=None):
 
     return data
 
-
-stationName =  os.environ.get('stationName','stacja1')
-latitude = os.environ.get('latitude','0')
-longitude =  os.environ.get('longitude','0')
+stationName =  os.environ.get('stationName','Meteo Stacja 2')
+latitude = os.environ.get('latitude','50.259')
+longitude =  os.environ.get('longitude','19.015')
 serverIp = os.environ.get('serverIp','localhost')
 port = os.environ.get('port','7013')
-seed = os.environ.get('seed','0')
+seed = os.environ.get('seed','2')
 
 #Nazwa Jednostka  MeteoDataType MeteoValueType
 valuesDateTypeValueType =[
     ["temperature",'C',0,1],
     ["humidity",'%',1,2],
-    ["windSpeed",'km/h',2,1],
-    ["atmosphericPressure",'hPa',3,1],
+    ["wind speed",'km/h',2,1],
+    ["pressure",'hPa',3,1],
     ["rainfall",'%',4,2],
     ]
 
