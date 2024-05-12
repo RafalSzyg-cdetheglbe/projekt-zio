@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApi.Models.DbEntities.AuditAndContext;
 
@@ -11,9 +12,10 @@ using WebApi.Models.DbEntities.AuditAndContext;
 namespace WebApi.Migrations
 {
     [DbContext(typeof(MeteoContext))]
-    partial class MeteoContextModelSnapshot : ModelSnapshot
+    [Migration("20240511060751_PoprawaInstancji")]
+    partial class PoprawaInstancji
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,9 +71,6 @@ namespace WebApi.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("StationId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Unit")
                         .HasColumnType("nvarchar(max)");
@@ -179,13 +178,11 @@ namespace WebApi.Migrations
                         .WithMany()
                         .HasForeignKey("AuditDataId");
 
-                    b.HasOne("WebApi.Models.DbEntities.MeteoEntities.MeteoStation", "MeteoStation")
+                    b.HasOne("WebApi.Models.DbEntities.MeteoEntities.MeteoStation", null)
                         .WithMany("MeteoData")
                         .HasForeignKey("MeteoStationId");
 
                     b.Navigation("AuditData");
-
-                    b.Navigation("MeteoStation");
                 });
 
             modelBuilder.Entity("WebApi.Models.DbEntities.MeteoEntities.MeteoStation", b =>

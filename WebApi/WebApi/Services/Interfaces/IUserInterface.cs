@@ -4,12 +4,13 @@ namespace WebApi.Services.Interfaces
 {
     public interface IUserInterface
     {
-        public int AddUser(UserRequestDTO userRequestDTO);
-        public void UpdateUser(UserRequestDTO userRequestDTO);
-        public List<UserResponseDTO> GetUsers();
-        public List<UserResponseDTO> GetUsersByFilters(UserFilterDto filter);
-        public UserResponseDTO GetUser(int userId);
+        public int AddUser(UserDTO userRequestDTO);
+        public void UpdateUser(UserDTO userRequestDTO);
+        public List<UserDTO> GetUsers();
+        public List<UserDTO> GetUsersByFilters(UserFilterDto filter);
+        public UserDTO GetUser(int userId);
         public bool DeleteUser(int userId);
+        public int? Login(string login, string password);
     }
 
     public class UserFilterDto

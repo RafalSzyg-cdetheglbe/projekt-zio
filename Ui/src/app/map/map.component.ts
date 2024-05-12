@@ -44,8 +44,9 @@ export class MapComponent implements AfterViewInit {
 
   constructor(private markerService: MarkerService) { }
 
-  ngAfterViewInit(): void {
+  async ngAfterViewInit(): Promise<void> {
     this.initMap();
+    //await this.markerService.getMeteoList().then((x) => {})
     this.markerService.makeMeteoMarkers(this.map);
   }
 }

@@ -30,6 +30,8 @@ namespace WebApi
 
             app.UseHttpsRedirection();
 
+            app.UseCors(option => option.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+
             app.UseAuthorization();
 
 

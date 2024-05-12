@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using WebApi.Models.DTO;
 
 namespace WebApi.Models.DbEntities.UserEntities
@@ -9,19 +10,21 @@ namespace WebApi.Models.DbEntities.UserEntities
         public int Id { get; set; }
         [Required]
         [StringLength(255)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
         [Required]
         [StringLength(255)]
-        public string Login { get; set; }
+        public string? Login { get; set; }
         [Required]
         [StringLength(255)]
-        public string Password { get; set; }
+        public string? Password { get; set; }
         [Required]
         public UserType UserType { get; set; }
         public bool IsActive { get; set; }
         public UserAudit? UserAudit { get; set; }
+        [ForeignKey(nameof(UserAuditId))]
+        public int? UserAuditId { get; set; }
         public User() { }
-        public User(UserRequestDTO userRequestDTO)
+        public User(UserDTO userRequestDTO)
         {
             Id = userRequestDTO.Id;
             Name = userRequestDTO.Name;

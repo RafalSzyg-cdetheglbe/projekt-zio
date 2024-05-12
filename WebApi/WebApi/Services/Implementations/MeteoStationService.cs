@@ -1,5 +1,6 @@
 ﻿using WebApi.Models.DbEntities.AuditAndContext;
 using WebApi.Models.DbEntities.MeteoEntities;
+using WebApi.Models.DbEntities.UserEntities;
 using WebApi.Models.DTO;
 using WebApi.Services.Interfaces;
 
@@ -38,6 +39,7 @@ namespace WebApi.Services.Implementations
             {
                 station.Latitude = latitude;
                 station.Longitude = longitude;
+                UpdateAuditData(station);
                 this._dbContext?.Update(station);
                 this._dbContext?.SaveChanges();
             }
@@ -68,30 +70,78 @@ namespace WebApi.Services.Implementations
             }
         }
 
+        private void UpdateAuditData(MeteoStation meteoStation)
+        {
+            if (meteoStation.AuditDataId != null)
+            {
+                var audit = this._dbContext.BaseAudits?.FirstOrDefault(x => x.Id == meteoStation.AuditDataId);
+                if (audit != null)
+                {
+                    audit.UpdatedAt = DateTime.Now;
+                    this._dbContext.Update(audit);
+                    this._dbContext.SaveChanges();
+                }
+            }
+            else
+            {
+                var auditData = new BaseAuditData();
+                auditData.UpdatedAt = DateTime.Now;
+                auditData.CreatedAt = DateTime.Now;
+                meteoStation.AuditData = auditData;
+            }
+        }
+
         private void UpdateMeteoStation(MeteoStation meteoStation, MeteoStationDTO dto)
         {
-            AddUser(meteoStation, dto);
+            AddOrUpdateUser(meteoStation, dto);
             FillBasicStationInfo(meteoStation, dto);
             UpdateMeteoData(meteoStation, dto);
+            UpdateAuditData(meteoStation);
         }
 
         private int AddNewStation(MeteoStationDTO dto)
         {
             var station = new MeteoStation();
-            AddUser(station, dto);
+            AddOrUpdateUser(station, dto);
             FillBasicStationInfo(station, dto);
             FillMeteoData(station, dto);
+            AddNewStationToDb(station);
 
             return station.Id;
         }
 
-        private void AddUser(MeteoStation station, MeteoStationDTO dto)
+        public void AddNewStationToDb(MeteoStation meteoStation)
         {
-            if (dto.Creator != null)
+            var audit = new BaseAuditData()
             {
-                var creator = this._dbContext?.Users?.FirstOrDefault(x => x.Id == dto.Creator.Id);
-                if (creator != null)
-                    station.Creator = creator;
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+            };
+            meteoStation.AuditData = audit;
+            this._dbContext.Add(audit);
+            this._dbContext.Add(meteoStation);
+            this._dbContext.SaveChanges();
+        }
+
+        public void UpdateMeteoStationToDb(MeteoStation meteoStation)
+        {
+            meteoStation.AuditData.UpdatedAt = DateTime.UtcNow;
+            this._dbContext.Update(meteoStation);
+            this._dbContext.SaveChanges();
+        }
+
+        private void AddOrUpdateUser(MeteoStation station, MeteoStationDTO dto)
+        {
+            if (dto.Creator == null || dto.Creator.Id <= 0)
+                throw new Exception("Podany użytkownik nie istnieje.");
+            else
+            {
+                var user = this._dbContext.Users?.FirstOrDefault(x => x.Id == dto.Creator.Id);
+                if (user != null)
+                {
+                    station.Creator = user;
+                    station.CreatorId = user.Id;
+                }
             }
         }
 
@@ -176,7 +226,7 @@ namespace WebApi.Services.Implementations
 
             var meteoData = new MeteoData(dto, audit);
             this._dbContext?.MeteoData?.Add(meteoData);
-            this._dbContext.SaveChanges();
+            this._dbContext?.SaveChanges();
 
             return meteoData;
         }
@@ -185,15 +235,86 @@ namespace WebApi.Services.Implementations
         {
             var meteoStation = this._dbContext?.MeteoStations?.FirstOrDefault(x => x.Id == id);
             if (meteoStation != null)
-                return new MeteoStationDTO(meteoStation);
+                return CreateStationDTOAndFillData(meteoStation);
             return null;
+        }
+
+        private MeteoStationDTO CreateStationDTOAndFillData(MeteoStation meteoStation)
+        {
+            var dto = new MeteoStationDTO(meteoStation);
+            FillAuditDataDtO(dto, meteoStation.AuditDataId);
+            FillUserDTO(dto, meteoStation.CreatorId);
+            FillMeteoDataDTO(dto);
+            return dto;
+        }
+
+        private MeteoStationDTO FillUserDTO(MeteoStationDTO dto, int creatorId)
+        {
+            var user = this._dbContext.Users?.FirstOrDefault(x => x.Id == creatorId);
+            if (user != null)
+                dto.Creator = new UserDTO(user);
+            return dto;
+        }
+
+        private MeteoStationDTO FillMeteoDataDTO(MeteoStationDTO dto)
+        {
+            var meteoData = this._dbContext.MeteoData?
+                .Where(x => x.MeteoStation != null && x.MeteoStation.Id == dto.Id).ToList()
+                .Select(x => new MeteoDataDTO(x)).ToList();
+
+            if (meteoData != null && meteoData.Count() > 0)
+                dto.MeteoData = meteoData;
+            return dto;
+        }
+
+        private MeteoStationDTO FillAuditDataDtO(MeteoStationDTO dto, int? auditDataId)
+        {
+            if (auditDataId.HasValue)
+            {
+                var auditData = this._dbContext.BaseAudits?.FirstOrDefault(x => x.Id == auditDataId);
+                if (auditData != null)
+                    dto.AuditData = new AuditDataDTO(auditData);
+            }
+            return dto;
         }
 
         public List<MeteoStationDTO>? GetAll()
         {
             if (this._dbContext?.MeteoStations != null)
-                return this._dbContext?.MeteoStations?.Select(x => new MeteoStationDTO(x)).ToList();
+            {// nie upraszczac linq bo sie nie da, wywala blad z polaczeniem do bazy
+                var res = new List<MeteoStationDTO>();
+                var stations = this._dbContext?.MeteoStations?.ToList();
+                foreach (var station in stations)
+                    res.Add(CreateStationDTOAndFillData(station));
+                return res;
+            }
             return new List<MeteoStationDTO>();
+        }
+
+        public List<MeteoStationListEntry> GetUserStationsListEntries(int userId)
+        {
+            var stations = this._dbContext.MeteoStations?.Where(x => x.CreatorId == userId).ToList();
+            if (stations != null && stations.Count() > 0)
+                return stations.Select(x => ConvertStationToListEntry(x)).ToList();
+            else
+                return new List<MeteoStationListEntry>();
+        }
+
+        private MeteoStationListEntry ConvertStationToListEntry(MeteoStation meteoStation)
+        {
+            var entry = new MeteoStationListEntry();
+            entry.Id = meteoStation.Id;
+            if (meteoStation.AuditData != null)
+            {
+                var createdAt = meteoStation.AuditData.CreatedAt.ToString("yyyy-MM-dd HH:mm");
+                var updatedAt = meteoStation.AuditData.UpdatedAt.ToString("yyyy-MM-dd HH:mm");
+                entry.AuditData = "Created at: " + createdAt + ", updated at: " + updatedAt;
+            }
+            if (meteoStation.Name != null)
+                entry.Name = meteoStation.Name;
+            entry.Coordinates = "Latitude: " + Convert.ToString(meteoStation.Latitude) + ", Longitude: "
+                + Convert.ToString(meteoStation.Longitude);
+            return entry;
         }
     }
 }

@@ -14,7 +14,7 @@ namespace WebApi.Models.DTO
         public MeteoDataType DataType { get; set; }
         public string? Value { get; set; }
         public MeteoValueType ValueType { get; set; }
-
+        public MeteoDataDTO() { }
         public MeteoDataDTO(int id, string? name, string? value, MeteoValueType valueType, string? description, string? unit, AuditDataDTO? auditData, MeteoDataType dataType)
         {
             Id = id;

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApi.Models.DbEntities.AuditAndContext;
 
@@ -11,9 +12,10 @@ using WebApi.Models.DbEntities.AuditAndContext;
 namespace WebApi.Migrations
 {
     [DbContext(typeof(MeteoContext))]
-    partial class MeteoContextModelSnapshot : ModelSnapshot
+    [Migration("20240511110539_poprawa_auditData_meteoData")]
+    partial class poprawa_auditData_meteoData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

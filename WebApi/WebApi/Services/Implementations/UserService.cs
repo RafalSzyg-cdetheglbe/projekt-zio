@@ -15,7 +15,7 @@ namespace WebApi.Services.Implementations
             this._dbContext = meteoContext;
         }
 
-        public int AddUser(UserRequestDTO userRequestDTO)
+        public int AddUser(UserDTO userRequestDTO)
         {
             if (userRequestDTO != null)
                 return CreateUserWithAuditData(userRequestDTO);
@@ -30,8 +30,12 @@ namespace WebApi.Services.Implementations
             return audit;
         }
 
-        private int CreateUserWithAuditData(UserRequestDTO userRequestDTO)
+        private int CreateUserWithAuditData(UserDTO userRequestDTO)
         {
+            var checkIfExists = this._dbContext.Users?.FirstOrDefault(x => x.Login == userRequestDTO.Login || x.Name == userRequestDTO.Name);
+            if (checkIfExists != null)
+                throw new Exception("Użytkownik z takimi danymi logowania już istnieje na bazie danych");
+
             var audit = CreateDefaultAudit();
             var user = new User(userRequestDTO);
             user.UserAudit = audit;
@@ -58,23 +62,23 @@ namespace WebApi.Services.Implementations
             return false;
         }
 
-        public UserResponseDTO GetUser(int userId)
+        public UserDTO GetUser(int userId)
         {
             var user = _dbContext.Users?.FirstOrDefault(x => x.Id == userId);
             if (user != null)
-                return new UserResponseDTO(user);
+                return new UserDTO(user);
             return null;
         }
 
-        public List<UserResponseDTO> GetUsers()
+        public List<UserDTO> GetUsers()
         {
             if (_dbContext.Users == null || _dbContext.Users.Count() == 0)
-                return new List<UserResponseDTO>();
+                return new List<UserDTO>();
             else
-                return _dbContext.Users.Select(x => new UserResponseDTO(x)).ToList();
+                return _dbContext.Users.Select(x => new UserDTO(x)).ToList();
         }
 
-        public List<UserResponseDTO> GetUsersByFilters(UserFilterDto filter)
+        public List<UserDTO> GetUsersByFilters(UserFilterDto filter)
         {
             if (filter != null && _dbContext.Users != null)
             {
@@ -84,13 +88,13 @@ namespace WebApi.Services.Implementations
                     .FilterByUserType(filter.UserType)
                     .FilterByIsActive(filter.isActive)
                     .FilterByCreationDate(filter.CreationDate)
-                    .Select(x => new UserResponseDTO(x))
+                    .Select(x => new UserDTO(x))
                     .ToList();
             }
             return GetUsers();
         }
 
-        public void UpdateUser(UserRequestDTO userRequestDTO)
+        public void UpdateUser(UserDTO userRequestDTO)
         {
             if (userRequestDTO != null)
             {
@@ -99,14 +103,43 @@ namespace WebApi.Services.Implementations
                 {
                     user.Login = userRequestDTO.Login;
                     user.IsActive = userRequestDTO.IsActive;
-                    user.UserAudit.UpdatedAt = DateTime.Now;
                     user.UserType = userRequestDTO.UserType;
                     user.Password = userRequestDTO.Password;
                     user.Name = userRequestDTO.Name;
+                    UpdateUserAudit(user);
                     _dbContext.Update(user);
                     _dbContext.SaveChanges();
                 }
             }
+        }
+
+        private void UpdateUserAudit(User user)
+        {
+            if (user.UserAuditId.HasValue)
+            {
+                var audit = _dbContext.UserAudit?.FirstOrDefault(x => x.Id == user.UserAuditId);
+                if (audit != null)
+                {
+                    audit.UpdatedAt = DateTime.Now;
+                    this._dbContext.SaveChanges();
+                }
+            }
+            else
+            {
+                var audit = new UserAudit() { CreatedAt = DateTime.Now, LastLoginAt = DateTime.Now, UpdatedAt = DateTime.Now };
+                this._dbContext.Add(audit);
+                this._dbContext.SaveChanges();
+                user.UserAudit = audit;
+                user.UserAuditId = audit.Id;
+            }
+        }
+
+        public int? Login(string login, string password)
+        {
+            if (this._dbContext.Users == null || this._dbContext.Users.Count() == 0)
+                return null;
+            var user = this._dbContext.Users.FirstOrDefault(x => x.Login == login && x.Password == password);
+            return user != null ? user.Id : null;
         }
     }
 

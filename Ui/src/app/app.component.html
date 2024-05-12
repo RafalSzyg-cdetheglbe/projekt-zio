@@ -1,17 +1,47 @@
-<p-toolbar
-    [style]="{ 'border-radius': '3rem', 'background-image': 'linear-gradient(to right, var(--primary-color), var(--bluegray-700))' }">
+<p-toolbar [style]="{ 'border-radius': '3rem', 'background-image': 'linear-gradient(to right, var(--primary-color), var(--bluegray-700))' }">
     <ng-template pTemplate="start">
         <i class="pi pi-globe" style="font-size: 40px; color: var(--primary-color-text)"></i>
-        <span class="meteoTitle ">MeteoApp</span>
+        <span class="meteoTitle">MeteoApp</span>
     </ng-template>
 
     <ng-template pTemplate="center">
-        <p-button [rounded]="true" label="Add meteo station" icon="pi pi-plus"></p-button>
+        <p-button [rounded]="true" *ngIf="userId > 0" label="Add meteo station" icon="pi pi-plus" (click)="showDialog()"></p-button>
+        <p-dialog [(visible)]="visible">
+            <ng-template pTemplate="content">
+                <div class="dialog-container">
+                    <h2 class="text-primary-50 font-semibold">Add Meteo Station</h2>
+                    <form (ngSubmit)="onSubmit()" class="form-container">
+                        <div class="form-group">
+                            <label for="name" class="text-primary-50 font-semibold">Name:</label>
+                            <input pInputText id="name" name="name" [(ngModel)]="meteoStationData.name" class="form-control" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="longitude" class="text-primary-50 font-semibold">Longitude:</label>
+                            <input pInputText id="longitude" name="longitude" [(ngModel)]="meteoStationData.longitude" class="form-control" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="latitude" class="text-primary-50 font-semibold">Latitude:</label>
+                            <input pInputText id="latitude" name="latitude" [(ngModel)]="meteoStationData.latitude" class="form-control" required />
+                        </div>
+
+                        <div class="form-actions">
+                            <p-button [rounded]="true" label="Submit" (click)="onSubmit()" />
+                            <p-button [rounded]="true" label="Cancel" (click)="closeDialog()" />
+                        </div>
+                    </form>
+                </div>
+            </ng-template>
+        </p-dialog>
     </ng-template>
 
     <ng-template pTemplate="end">
-        <div style="margin-right: 40px">
-            <app-user></app-user>
+        <div style="margin-right: 40px" *ngIf="userId < 0 || userId === undefined">
+            <app-user (userIdEmitter)="handleUserId($event)"></app-user>
+        </div>
+        <div *ngIf="userId > 0">
+            <p-button [rounded]="true" label="Log-out" icon="pi pi-user" size="large" (click)="logOut()"></p-button>
         </div>
     </ng-template>
 </p-toolbar>
