@@ -10,6 +10,7 @@ namespace WebApi.Services.Interfaces
         public List<UserDTO> GetUsersByFilters(UserFilterDto filter);
         public UserDTO GetUser(int userId);
         public bool DeleteUser(int userId);
+        public int? Login(string login, string password);
     }
 
     public class UserFilterDto

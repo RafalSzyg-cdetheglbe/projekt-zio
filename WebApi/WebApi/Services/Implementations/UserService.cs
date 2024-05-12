@@ -133,6 +133,14 @@ namespace WebApi.Services.Implementations
                 user.UserAuditId = audit.Id;
             }
         }
+
+        public int? Login(string login, string password)
+        {
+            if (this._dbContext.Users == null || this._dbContext.Users.Count() == 0)
+                return null;
+            var user = this._dbContext.Users.FirstOrDefault(x => x.Login == login && x.Password == password);
+            return user != null ? user.Id : null;
+        }
     }
 
     public static class UserQueryExtensions
