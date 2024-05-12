@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [ButtonModule, DialogModule,FormsModule, CommonModule],
+  imports: [ButtonModule, DialogModule, FormsModule, CommonModule],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })
@@ -16,13 +16,13 @@ export class UserComponent {
   public visible: boolean = false;
   private readonly URL = "https://localhost:7013/api/Users/login";
   @Output() userIdEmitter: EventEmitter<number> = new EventEmitter<number>();
-  
-  username :string ="";
-  password : string ="";
+
+  username: string = "";
+  password: string = "";
   bledneDaneLogowania: boolean = false;
 
-  constructor(private httpClient: HttpClient){}
-  
+  constructor(private httpClient: HttpClient) { }
+
   showDialog() {
     this.visible = true
   }
@@ -40,9 +40,10 @@ export class UserComponent {
         }
       }).subscribe(
         response => {
-          if(response === undefined)
+          if (!response) {
             this.bledneDaneLogowania = true;
-          else{
+          }
+          else {
             this.userIdEmitter.emit(response);
             this.bledneDaneLogowania = false;
             this.visible = false;
@@ -53,6 +54,6 @@ export class UserComponent {
       this.bledneDaneLogowania = true;
     }
     this.username = "";
-    this.password ="";
+    this.password = "";
   }
 }
